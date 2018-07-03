@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 
+# dictionary 'cars' to simulate a database resource
 cars = [
     {
         "id": 1,
@@ -25,13 +26,15 @@ cars = [
 
 class Car():
 
+    # GET the whole list of cars
     @app.route('/cars')
     def get_cars():
         return jsonify(cars)
 
+    # GET an specific car by ID
     @app.route('/cars/<int:id>')
     def get_car(id):
-        trying to verify if id was entered
+        # trying to verify if id was entered
         if 'id' in request.args:
             car_id = request.args.get('id')
         return "Bad request", 404
@@ -41,9 +44,10 @@ class Car():
                 return jsonify(car), 200
         return "car not found", 404
     
-
+    # POST a new car using a json body
     @app.route('/cars', methods=['POST'])
     def add_car():
+        # getting the body(json object) from the request 
         car_obj = request.get_json()
         car_id = car_obj["id"]
         for car in cars:
