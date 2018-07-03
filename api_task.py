@@ -27,20 +27,19 @@ cars = [
 class Car():
 
     # GET the whole list of cars
-    @app.route('/cars')
+    @app.route('/cars/all')
     def get_cars():
         return jsonify(cars)
 
     # GET an specific car by ID
-    @app.route('/cars/<int:id>')
-    def get_car(id):
+    @app.route('/cars', methods=['GET'])
+    def get_car():
         # trying to verify if id was entered
         if 'id' in request.args:
-            car_id = request.args.get('id')
-        return "Bad request", 404
-            
+            car_id = int(request.args.get('id'))
+        
         for car in cars:
-            if(car_id == car["id"]):
+            if(car["id"] == car_id):
                 return jsonify(car), 200
         return "car not found", 404
     
@@ -73,19 +72,17 @@ class Car():
         cars.append(car_obj)
         return jsonify(car_obj), 201
 
-    @app.route('/cars/<int:id>', methods=['DELETE'])
-    def delete_car(id):
+    @app.route('/cars', methods=['DELETE'])
+    def delete_car():
         # trying to verify if id was entered
         if 'id' in request.args:
-            car_id = request.args.get('id')
-        return "Bad request", 404
+            car_id = int(request.args.get('id'))
 
         for car in cars:
-            if(car_id == car["id"]):
+            if(car["id"] == car_id):
                 cars.remove(car)
+                return "Car with id: {} have been deleted.".format(car_id), 200
         return "car not found", 404
-
-        return "Car with id: {} have been deleted.".format(id), 200
       
 if __name__ == "__main__":  
     app.run(debug=True)
